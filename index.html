@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini Jeu et Galerie</title>
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100%;
+            margin: 0;
+            background-color: #ffffff;
+            overflow-y: auto; /* Permet le défilement vertical */
+        }
+        #game-container {
+            text-align: center;
+            padding: 20px;
+            background: rgb(0, 0, 0);
+            border-radius:0px;
+            box-shadow: 0 0 0px rgba(0, 0, 0, 0.747);
+            margin-top: 20px;
+            width: 90%;
+            max-width: 600px;
+        }
+        .letter {
+            display: inline-block;
+            margin: 5px;
+            padding: 10px;
+            font-size: 24px;
+            background: rgb(255, 255, 255);
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        #selected-letters {
+            margin: 20px 0;
+            background: rgb(255, 255, 255);
+            font-size: 24px;
+            min-height: 30px;
+        }
+        button {
+            margin: 5px;
+            padding: 10px;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        #content {
+            display: none;
+            text-align: center;
+            width: 100%;
+            padding: 20px;
+        }
+
+        /* Galerie de photos */
+        #filters {
+            display: flex;
+            gap: 10px;
+            justify-content: left;
+            margin-bottom: 20px;
+        }
+
+        #filters div {
+            margin-bottom: 10px;
+            border: 3px solid rgba(19, 70, 221, 0.7);
+            padding: 5px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        #gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            align-items: center;
+            margin: auto;
+        }
+
+        #gallery .active {
+            width: 30%;
+            padding: 5px;
+            transition: width .3s;
+        }
+
+        #gallery .inactive {
+            width: 0;
+            padding: 0;
+            transition: width .3s;
+        }
+
+        .tooltip {
+            position: absolute;
+            background: rgba(19, 70, 221, 0.7);
+            color: rgb(255, 255, 255);
+            text-align: left;
+            padding: 10px;
+            border-radius: 1px;
+            font-size: 14px;
+            display: none;
+            pointer-events: none;
+            max-width: 200px;
+            white-space: pre-line;
+        }
+
+        #back-to-top {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #back-to-top:hover {
+            background-color: #0056b3;
+        }
+        footer{
+            color: #0056b3;
+            text-align: center;
+            padding: 5em 0em;
+        }
+
+        footer a{
+            color: #000000;
+            text-decoration: none;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="letters"></div>
+        <div id="selected-letters"></div>
+        <button onclick="validateWord()">Valider</button>
+        <button onclick="resetGame()">Réessayer</button>
+    </div>
+
+    <!-- Section Galerie, cachée au départ -->
+    <div id="content">
+        <section id="filters">
+            <div id="all">tout</div>
+            <div id="pratiq">pratiq</div>
+            <div id="architecture">architecture</div>
+            <div id="bird">photographie_urbaine</div>
+            <div id="people">photographie_paysage</div>
+            <div id="montagne">photographie_montagne</div>
+            <div id="construction">construction</div>
+            <div id="menuiserie">menuiserie</div>
+            <div id="art">art</div>
+            <div id="portrait">portrait</div>
+            <div id="décharge">décharge</div>
+            <div id="linogravure">linogravure</div>
+            <div id="édition">édition_reliure</div>
+            <div id="volée">photographie_volée</div>
+            <div id="raté">expérience</div>
+        </section>
+        <div id="gallery">
+            <img src="images/PAUL MARCEL 1.jpg" data-description="05/02/2025\nILE SAINT-DENIS, IDF \nLes berges transformés en décharge à ciel ouvert au bout de l'Ile St-Denis." data-décharge="" data-bird="" class="active">
+            <img src="images/PAUL MARCEL 2.jpg" data-description="05/02/2025\nILE SAINT-DENIS, IDF \nLa Cité Marcel Paul désertée." data-décharge=""data-bird class="active">
+            <img src="images/PAUL MARCEL 3.jpg" data-description="05/02/2025\nILE SAINT-DENIS, IDF \nLe bâti délabré datant des années 60 de la cité Marcel Paul." data-architecture="" class="active">
+            <img src="images/PAUL MARCEL 4.jpg" data-description="05/02/2025\nILE SAINT-DENIS, IDF \nAu milieu du traffic de l'Ile St-Denis, les bouches fumantes." data-bird="" class="active">
+            <img src="images/PAUL MARCEL 5.jpg" data-description="05/02/2025\nILE SAINT-DENIS, IDF \nLes berges grillagées de l'Ile St-Denis sont tombés pour y laissé l'accès." data-bird="" class="active">
+            <img src="images/PAUL MARCEL 6.jpg" data-description="05/02/2025\nILE SAINT-DENIS, IDF \nEn bas des tours de la cité Marcel Paul, abandonné et encombré après le relogement contraint de tous les résidents." data-bird=""data-décharge class="active">
+            <img src="images/LOREM3.jpg" data-description="05/02/2025\nPARIS, IDF \nOeuvre de LOREM (rencontré par hasard dans la rue) maintenant entreposé dans le couloir au désespoir de Denis." data-art="" class="active">
+            <img src="images/LOREM2.jpg" data-description="05/02/2025\nPARIS, IDF \nLOREM en plein exercice." data-art="" class="active">
+            <img src="images/LOREM1.jpg" data-description="05/02/2025\nPARIS, IDF \nPremiers traits de LOREM sur un miroir dans la rue." data-art="" class="active">
+            <img src="images/portrait médecins.jpg" data-description="14/01/2025\nSTUDIO PHOTO, nul part \nShooting déguisé en médecin pour illustrer RENOVITAS, notre projet-médicament." data-portrait="" class="active">
+            <img src="images/FLAINE4.jpg" data-description="03/01\nFLAINE, Savoie \nLa tête de femme de Picasso encadré par les plots de r_architeure." 
+                data-montagne="" class="active">
+            <img src="images/FLAINE3.jpg" data-description="03/01\nFLAINE, Savoie \nLe Boqueteau de Dubuffet au milieu des skieurs." data-montagne="" class="active">
+            <img src="images/FLAINE2.jpg" data-description="03/01\nFLAINE, Savoie \nLa chapelle oecuménique de Marcel Breuer." data-montagne="" class="active">
+            <img src="images/FLAINE.jpg" data-description="03/01\nFLAINE, Savoie \nLe Totem en fond, les doigts qui gèlent, et les skieurs qui zieutent." data-montagne="" class="active">
+            <img src="images/Sans titre-3.jpg" data-description="23/12/2024\nSTUDIO PHOTO, nul part \nTable de nuit vue sur la tranche." data-menuiserie="" class="active">
+            <img src="images/Sans titre-2.jpg" data-description="23/12/2024\nSTUDIO PHOTO, nul part \nMugshot de table de nuit, en aggloméré teinté vert et MDF, avec Booba qui refuse de ne pas avoir l'attention." data-menuiserie="" class="active">
+            <img src="images/Sans titre-1.jpg" data-description="23/12/2024\nSTUDIO PHOTO, nul part \nMugshot de table de nuit, en aggloméré teinté vert et MDF, avec Emilie comme modèle." data-menuiserie="" class="active">
+            <img src="images/RAPPORT LICENCE 4.jpg" data-description="23/12/2024\nSTUDIO PHOTO, nul part \nEmilie exténué après plusieurs heures comme modèle." data-édition="" class="active">
+            <img src="images/RAPPORT LICENCE 3.jpg" data-description="23/12/2024\nSTUDIO PHOTO, nul part \nRapport de licence portant sur l'évolution de l'architecte-ingénieur dans le temps." data-édition="" class="active">
+            <img src="images/RAPPORT LICENCE 2.jpg" data-description="23/12/2024\nSTUDIO PHOTO, nul part \nEdition du rapport de licence avec des intercallaires de couleurs." data-édition="" class="active">
+            <img src="images/RAPPORT LICENCE 1.jpg" data-description="23/12/2024\nSTUDIO PHOTO, nul part \nRapport de licence, reliure à dos collé simple, fait manuellement mais toujours fonctionnelle aujourd'hui." data-édition="" class="active">
+            <img src="images/exlibris 3.jpg" data-description="23/12/2024\nSTUDIO PHOTO, nul part \nEXlibris fait en linogravure et une encre bleue marine, mise en scène avec Emilie." data-linogravure="" class="active">
+            <img src="images/exlibris 2.jpg" data-description="23/12/2024\nSTUDIO PHOTO, nul part \nTampon pour l'EXlibris, mise en scène avec Emilie." data-linogravure="" class="active">
+            <img src="images/exlibris 1.jpg" data-description="23/12/2024\nSTUDIO PHOTO, nul part \nGlaz, livre touchant écrit par Servanne, mise en scène avec Emilie." data-linogravure="" class="active">
+            <img src="images/1ER LOREM.png" data-description="15/12/2024\nPARIS, IDF \nDeuxième tableau de LOREM récupéré, trouvée grâce à Denis." data-art="" class="active">
+            <img src="images/fecamp1.jpg" data-description="30/11/2024\nCOTE D'ALBATRE, Normandie \nVue de la belle maison de Jules avec Méline comme modèle." data-people="" class="active">
+            <img src="images/fecamp2.jpg" data-description="30/11/2024\nCOTE D'ALBATRE, Normandie \nPierre-Louis comme modèle, mimant le saut du haut de la falaise." data-people="" class="active">
+            <img src="images/photo nocturne.jpg" data-description="20/11/2024\nParis, IDF \nPremières prises de vue avec le nouveau boitier, depuis la chambre." data-bird="" class="active">
+            <img src="images/volée 1.jpg" data-description="20/07/2024\nMARSEILLE, Côte d'Azur \nPhoto volée au passage des canadaires qui repartent de la zone d'écopage." data-volée="" class="active">
+            <img src="images/POST_PROJET S6.jpg" data-description="Superbe architecture moderne avec un design innovant.\nUne approche durable et écologique." data-architecture="" class="active">
+            <img src="images/POST_PROJET S62.jpg" data-description="Superbe architecture moderne avec un design innovant.\nUne approche durable et écologique." data-architecture="" class="active">
+            <img src="images/POST_PROJET S63.jpg" data-description="Superbe architecture moderne avec un design innovant.\nUne approche durable et écologique." data-architecture="" class="active">
+            <img src="images/POST_PROJET S64.jpg" data-description="Superbe architecture moderne avec un design innovant.\nUne approche durable et écologique." data-architecture="" class="active">
+            <img src="images/POST_PROJET S65.jpg" data-description="Superbe architecture moderne avec un design innovant.\nUne approche durable et écologique." data-architecture="" class="active">
+            <img src="images/POST_PROJET S66.jpg" data-description="Superbe architecture moderne avec un design innovant.\nUne approche durable et écologique." data-architecture="" class="active">
+            <img src="images/POST_PROJET S67.jpg    " data-description="Superbe architecture moderne avec un design innovant.\nUne approche durable et écologique." data-architecture="" class="active">
+            <img src="images/DP_SAINT_GIL_insta4.jpg" data-description="02/08/2024\nSAINT-GILDAS DE RHUYS, Bretagne \nDéclaration préalable produite avec Emilie sous la direction de Denis." data-architecture="" class="active">
+            <img src="images/regularisation RDC 2.jpg" data-description="15/07/2024\nISSY-LES-MOULINEAUX, IDF \nDossier de changement de locaux avec Juliette." data-architecture="" class="active">
+            <img src="images/regularisation R-1 2.jpg" data-description="15/07/2024\nISSY-LES-MOULINEAUX, IDF \nDossier de changement de locaux avec Juliette." data-architecture="" class="active">
+        </div>
+        <div class="tooltip" id="tooltip"></div>
+        <img src="images/pratiq.jpg" height="1000" 
+        <footer style="text-align: center; padding: 20px;
+        
+        <p style="margin-top: 10px; font-size: 14px; color: #333;">&copy; 2025 Pierre Renault |  <a href="https://www.linkedin.com/in/pierre-renault-54a83a268/">linkedin</a> </p>
+   
+        </footer>
+    </div>
+  
+
+
+    <script>
+        const correctWord = "PRATIQ";
+        let selectedLetters = "";
+
+        // Logique du jeu
+        function shuffle(array) {
+            return array.sort(() => Math.random() - 0.5);
+        }
+
+        function createGame() {
+            const lettersContainer = document.getElementById("letters");
+            const shuffledLetters = shuffle(correctWord.split(""));
+            lettersContainer.innerHTML = "";
+            shuffledLetters.forEach(letter => {
+                const span = document.createElement("span");
+                span.textContent = letter;
+                span.classList.add("letter");
+                span.onclick = () => selectLetter(letter, span);
+                lettersContainer.appendChild(span);
+            });
+        }
+
+        function selectLetter(letter, element) {
+            selectedLetters += letter;
+            document.getElementById("selected-letters").textContent = selectedLetters;
+            element.remove();
+        }
+
+        function validateWord() {
+            if (selectedLetters === correctWord) {
+                document.getElementById("game-container").style.display = "none";
+                document.getElementById("content").style.display = "block";
+            } else {
+                alert("Mot incorrect. Essayez encore !");
+                resetGame();
+            }
+        }
+
+        function resetGame() {
+            selectedLetters = "";
+            document.getElementById("selected-letters").textContent = "";
+            createGame();
+        }
+
+        createGame();
+
+        // Logique de filtre et tooltip pour la galerie
+        window.onload = () => {
+            let filters = document.querySelectorAll("#filters div");
+            let tooltip = document.getElementById("tooltip");
+            
+            for (let filter of filters) {
+                filter.addEventListener("click", function () {
+                    let tag = this.id;
+                    let images = document.querySelectorAll("#gallery img");
+                    
+                    for (let image of images) {
+                        image.classList.replace("active", "inactive");
+                        if (tag in image.dataset || tag === "all") {
+                            image.classList.replace("inactive", "active");
+                        }
+                    }
+                });
+            }
+            
+            let images = document.querySelectorAll("#gallery img");
+            
+            images.forEach(img => {
+                img.addEventListener("mouseover", (event) => {
+                    tooltip.innerHTML = img.dataset.description.replace(/\\n/g, "<br>");
+                    tooltip.style.display = "block";
+                    tooltip.style.left = event.pageX + 10 + "px";
+                    tooltip.style.top = event.pageY + 10 + "px";
+                });
+                
+                img.addEventListener("mousemove", (event) => {
+                    tooltip.style.left = event.pageX + 10 + "px";
+                    tooltip.style.top = event.pageY + 10 + "px";
+                });
+                
+                img.addEventListener("mouseout", () => {
+                    tooltip.style.display = "none";
+                });
+            });
+        };
+
+        // Fonction de défilement vers le haut
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+</body>
+</html>
