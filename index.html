@@ -89,6 +89,7 @@
             margin-bottom: 20px;
             margin-left: 20px;
             flex-wrap: wrap;
+          
             font-family: 'Courier New', Courier, monospace
 
             
@@ -196,6 +197,62 @@
               height: auto;
         }
 
+
+        #champTexte {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        #champTexte textarea {
+            width: 80%;
+            height: 150px;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+
+        h1 {
+            padding-right: 20px;
+            padding-left: 20px;
+            text-align: left;
+            font-size: 45px;
+            margin-bottom: 2px;
+            margin-top: 2px;
+            flex-wrap: wrap;
+            font-family: 'Courier New', Courier, monospace
+            
+        }
+
+         h3 {
+            padding-left: 20px;
+            padding-right: 20px;
+            text-align: left;
+            font-size: 75px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            font-family: 'Courier New', Courier, monospace
+            
+        }
+
+        textarea {
+            width: 75%;
+            border: 3px solid rgba(19, 70, 221, 0.7); /* Bordure bleue */
+            border-radius: 5px;
+            padding-top: 20px;
+            padding-left: 20px;
+            padding-right: 20px;
+            text-align: left;
+            font-size: 25px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            font-family: 'Courier New', Courier, monospace
+            
+        }
+
+        
     </style>
 </head>
 <body>
@@ -210,10 +267,11 @@
     </div>
 
     <!-- Section Galerie, cachée au départ -->
-    <div id="content">
+    <div id="content"style="display: none;">
         <section id="filters">
             <div id="all">tout</div>
             <div id="pratiq">pratiq</div>
+            <div id="papier">presse_papier</div>
             <div id="architecture">architecture</div>
             <div id="bird">photographie_urbaine</div>
             <div id="people">photographie_paysage</div>
@@ -230,7 +288,16 @@
             <div id="mer">photographie_mer</div>
             <div id="encadrement">encadrement</div>
         </section>
+
+
         <div id="gallery">
+
+            <img src="images/BELFAST 02.jpg" data-description="<i>22/09/2024\nBELFAST, Irlande du Nord </i>\nAprès avoir traversé toute la ville, on se décide avec Emilie sous la pluie à aller jusqu'a la zone industrielle pour voir ces grues, emblème de la ville." data-bird="" class="active">
+            <img src="images/BELFAST 05.jpg" data-description="<i>21/09/2024\nGIANT'S COSEWAY, Irlande du Nord </i>\nPaysage pris depuis la côte de Giant's Coseway.\n Opturateur capricieux + photographie argentique mal développé + pellicule bas de gamme = rendu expériemental." data-raté="" data-people="" class="active">
+            <img src="images/BELFAST 04.jpg" data-description="<i>21/09/2024\nGIANT'S COSEWAY, Irlande du Nord </i>\nPaysage pris sur le chemin de côte d'Irlande du Nord." data-people="" class="active">
+            <img src="images/BELFAST 01.jpg" data-description="<i>21/09/2024\nGIANT'S COSEWAY, Irlande du Nord </i>\nPaysage pris depuis la côte de Giant's Coseway.\n Opturateur capricieux + photographie argentique mal développé + pellicule bas de gamme = rendu expériemental." data-people="" data-raté="" class="active">
+            <img src="images/BELFAST 03.jpg" data-description="<i>22/09/2024\nBELFAST, Irlande du Nord </i>\nInstant de rue capturé à Belfast, acteur principal : un feu vert." data-bird="" class="active">
+
 
             <img src="images/range cable crochet.gif" data-description="<i>19/02/2025\nFOND BLANC, nulle part </i>\nEmilie, passionnée de crochet, vous présente son range cable\nEt oui je l'anthropomorphise dans les portraits, je fais ce que je veux." data-portrait="" class="active">
             <img src="images/cadre 1.jpg" data-description="19/02/2025\nFOND BLANC, nulle part \nOeuvre récupérée dans la poussière a l'ODER, cadre en sapin lazuré, oeuvre enserrée entre deux verres." data-encadrement="" class="active">
@@ -321,6 +388,21 @@
             <img src="images/td structure S58.jpg" data-description="S5/2024\nENSAPLV, PARIS, IDF \nPlans représentants les descentes de charges d'une aile du projet à Aubervilliers." data-architecture="" class="active">
            
                    </div>
+
+        <div id="champTexte">
+            <h3> <span style="color:  rgba(19, 70, 221, 0.7);">pra</span>tiq </h3> 
+            <h1>[pʁa.tik] adj. et n. - terme non répertorié dans le dictionnaire. </h1> 
+            <h1> propositions de rapprochements : </h1> 
+            <h1><i>une pratique réfléchie, un <span style="color:  rgba(19, 70, 221, 0.7);">outil</span> très pratique.</i></h1>
+            <h1></h1> 
+            <h1><br> pratiq   est un <span style="color:  rgba(19, 70, 221, 0.7);">labo</span>ratoire d'expérimentations, de partage d'idées. 
+                Cet outil en constante évolution se présente aujourd'hui, sous la forme d'une banque d'<span style="color:  rgba(19, 70, 221, 0.7);">images classées</span>.  </h1> 
+         </div>          
+
+     <div id="autreChampTexte">
+            <textarea rows="5" placeholder="Même en vous baladant, votre texte restera."autofocus></textarea>
+         </div>   
+     
         <div class="tooltip" id="tooltip"></div>
         <img src="images/pratiq.jpg" height="1000"
         <footer style="text-align: center; padding: 20px;
@@ -364,6 +446,7 @@
             if (selectedLetters === correctWord) {
                 document.getElementById("game-container").style.display = "none";
                 document.getElementById("content").style.display = "block";
+                createGame(); // Ajout de l'appel à createGame()
             } else {
                 alert("NUL !\nBon, je t'aide, la réponse c'est PRATIQ ...");
                 resetGame();
@@ -376,29 +459,51 @@
             createGame();
         }
 
-        createGame();
+        createGame(); // Appel initial à createGame()
 
         // Logique de filtre et tooltip pour la galerie
-        window.onload = () => {
-            let filters = document.querySelectorAll("#filters div");
-            let tooltip = document.getElementById("tooltip");
-            
-            for (let filter of filters) {
-                filter.addEventListener("click", function () {
-                    let tag = this.id;
-                    let images = document.querySelectorAll("#gallery img");
-                    
-                    for (let image of images) {
-                        image.classList.replace("active", "inactive");
-                        if (tag in image.dataset || tag === "all") {
-                            image.classList.replace("inactive", "active");
-                        }
-                    }
-                });
-            }
-            
+       window.onload = () => {
+    let filters = document.querySelectorAll("#filters div");
+    let tooltip = document.getElementById("tooltip");
+
+    for (let filter of filters) {
+        filter.addEventListener("click", function () {
+            let tag = this.id;
             let images = document.querySelectorAll("#gallery img");
-            
+            let gallery = document.getElementById("gallery");
+            let champTexte = document.getElementById("champTexte");
+            let autreChampTexte = document.getElementById("autreChampTexte");  // Référence au nouveau champ
+
+            // Gérer l'action "pratiq"
+            if (tag === "pratiq") {
+                gallery.style.display = "none";
+                champTexte.style.display = "block";
+                autreChampTexte.style.display = "none";  // S'assurer que l'autre champ est caché
+            }
+            // Gérer l'action "autreAction"
+            else if (tag === "papier") {
+                gallery.style.display = "none";
+                champTexte.style.display = "none";       // S'assurer que l'autre champ est caché
+                autreChampTexte.style.display = "block";
+            }
+            // Gérer les filtres de la galerie
+            else {
+                gallery.style.display = "flex"; // ou 'block', selon votre mise en page
+                champTexte.style.display = "none";  // S'assurer que les champs de texte sont cachés
+                autreChampTexte.style.display = "none";
+
+                for (let image of images) {
+                    image.classList.replace("active", "inactive");
+                    if (tag in image.dataset || tag === "all") {
+                        image.classList.replace("inactive", "active");
+                    }
+                }
+            }
+        });
+    }
+
+            let images = document.querySelectorAll("#gallery img");
+
             images.forEach(img => {
                 img.addEventListener("mouseover", (event) => {
                     tooltip.innerHTML = img.dataset.description.replace(/\\n/g, "<br>");
@@ -406,12 +511,12 @@
                     tooltip.style.left = event.pageX + 10 + "px";
                     tooltip.style.top = event.pageY + 10 + "px";
                 });
-                
+
                 img.addEventListener("mousemove", (event) => {
                     tooltip.style.left = event.pageX + 10 + "px";
                     tooltip.style.top = event.pageY + 10 + "px";
                 });
-                
+
                 img.addEventListener("mouseout", () => {
                     tooltip.style.display = "none";
                 });
