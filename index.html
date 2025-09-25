@@ -314,18 +314,60 @@
             
         }
 
+
+
         
+          .scratch-wrapper {
+            justify-content: center;
+            position:relative;
+            transform: center
+            margin
+            width:500px;
+            height:500px;
+            border-radius:0px;
+            overflow:hidden;
+            color:rgba(121, 92, 150, 0.845) ;
+        }
+        .prize {
+            padding-top: 50px;
+            padding-left: 50px;
+            position:absolute;
+            justify-content: center;
+            inset:10;
+            display:flex; align-items:center; justify-content:center;
+            font:700 1.4rem sans-serif;
+            text-align:center;
+            
+        }
+        canvas {
+            padding-top: 10px;
+            justify-content: center;
+            position:absolute;
+            inset:0;
+            width:100%; height:100%;
+            touch-action:none;        /* important pour mobile */
+            cursor:crosshair;
+            color:rgba(234, 198, 20, 0.845)
+        }
+
+
     </style>
 </head>
 <body>
     <div id="game-container">
         
-        <p>POUR ACCEDER AU CONTENU, RANGE LES LETTRES DU NOM DU SITE <br> DEUX INDICES - CA COMMENCE PAR <I>pra</I> - CA FINIT PAR <I>tiq</I></p>
+        <p>POUR ACCEDER AU CONTENU, FORME LE MOT <br> POUR LE TROUVER ESSAYE DE <I>GRATTER</I>.</p>
         <div id="letters"></div>
         <div id="selected-letters"></div>
       
         <button onclick="resetGame()">Réessayer</button>
         <button onclick="validateWord()">Valider</button>
+
+        <div class="scratch-wrapper">
+          <div class="prize">laboratoire</div>
+          <canvas id="scratch"></canvas>
+        </div>
+        
         <p> &copy; 2025 Pierre Renault |  <a href="https://www.linkedin.com/in/pierre-renault-54a83a268/">linkedin</a> |  <a href="https://www.instagram.com/pratiq___/?igsh=cmxneHA1MnV4aDlj&utm_source=qr">instagram</a></p>
     </div>
 
@@ -365,6 +407,11 @@
 
 
         <div id="gallery">
+
+
+            <img src="images/MILAN 04.jpg" data-description="<i>11/09/2025\n MILAN, Italie </i>\n Je trouve cette église sur le retour du centre_ville de Milan. Disposition des briques en avant en quinconce. Bel exemple du 'hangar décoré', les autres façades ne sont pas aussi travaillées. " data-bird="" data-architecture="" data-milano="" class="active">            
+            <img src="images/MILAN 03.jpg" data-description="<i>11/09/2025\n MILAN, Italie </i>\n Frontière Nord du quartier de Brera, quartier historique de Milan ou les voies ne sont que piétonnes." data-bird="" data-milano="" class="active">            
+            <img src="images/MILAN 02.jpg" data-description="<i>11/09/2025\n MILAN, Italie </i>\n Je me dirige vers le quartier de Brera pour découvrir.\n Je pose le vélo devant ce kiosque au milieu d'un carrefour routier." data-bird="" data-milano="" class="active">            
 
             <img src="images/MILAN 01.jpg" data-description="<i>08/09/2025\n MILAN, Italie </i>\n Après avoir posé mes valises, je pars découvrir mon quartier : Citta Studi. Au menu du premier soir, bien sûr : gnocchis al basilico." data-bird="" data-milano="" class="active">            
 
@@ -546,7 +593,7 @@
 
 
     <script>
-        const correctWord = "PRATIQ";
+        const correctWord = "LABORATOIRE";
         let selectedLetters = "";
 
         // Logique du jeu
@@ -589,6 +636,71 @@
             document.getElementById("selected-letters").textContent = "";
             createGame();
         }
+
+            (function(){
+            const canvas = document.getElementById('scratch');
+            const ctx = canvas.getContext('2d', { willReadFrequently:true });
+            let dpr = window.devicePixelRatio || 1;
+
+            function fit(){
+                const rect = canvas.getBoundingClientRect();
+                canvas.width  = rect.width * dpr;
+                canvas.height = rect.height * dpr;
+                ctx.setTransform(dpr,0,0,dpr,0,0);
+                drawMask();
+            }
+
+            function drawMask(){
+                ctx.globalCompositeOperation = 'source-over';
+                ctx.fillStyle = '#c0c0c0';
+                ctx.fillRect(0,0,canvas.width,canvas.height);
+                // petit effet métallique
+                const g = ctx.createLinearGradient(0,0,canvas.width,canvas.height);
+                g.addColorStop(0,'rgba(121, 92, 150, 0.845)');
+                g.addColorStop(0.5,'rgba(121, 92, 150, 0.845)');
+                g.addColorStop(1,'rgba(121, 92, 150, 0.845)');
+                ctx.fillStyle = g;
+                ctx.fillRect(0,0,canvas.width,canvas.height);
+            }
+
+            fit();
+            window.addEventListener('resize', fit);
+
+            const brush = 80; // pinceau plus large pour un passage unique
+            let drawing = false, last=null;
+
+            function pos(e){
+                const r = canvas.getBoundingClientRect();
+                const t = e.touches ? e.touches[0] : e;
+                return { x:(t.clientX - r.left), y:(t.clientY - r.top) };
+            }
+
+            function scratch(a,b){
+                ctx.save();
+                ctx.globalCompositeOperation = 'destination-out';
+                ctx.lineCap = 'round';
+                ctx.lineJoin = 'round';
+                ctx.lineWidth = brush;
+                ctx.beginPath();
+                ctx.moveTo(a.x, a.y);
+                ctx.lineTo(b.x, b.y);
+                ctx.stroke();
+                ctx.restore();
+            }
+
+            function down(e){ e.preventDefault(); drawing = true; last = pos(e); scratch(last,last);}
+            function move(e){ if(!drawing) return; const p=pos(e); scratch(last,p); last=p;}
+            function up(){ drawing=false; }
+
+            canvas.addEventListener('mousedown', down);
+            window.addEventListener('mousemove', move);
+            window.addEventListener('mouseup', up);
+            canvas.addEventListener('touchstart', down,{passive:false});
+            window.addEventListener('touchmove', move,{passive:false});
+            window.addEventListener('touchend', up);
+            })();
+
+
 
         createGame(); // Appel initial à createGame()
 
